@@ -13,7 +13,11 @@ searchMovies('spiderman')
   //console.log(body);
   let $ = cheerio.load(body);
   let list = $(".findResult").each(function(i, element){
-    console.log($(this).text());
+    const $element = $(element);
+    const $image = $element.find('td a img');
+    const $title = $element.find('td.result_text a');
+    console.log($title.text());
+    //console.log($image.attr('src'));
   });
 });
 
