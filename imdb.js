@@ -1,30 +1,19 @@
-const url = require('url');
-var http = require('http');
-var fs = require('fs');
-var express = require('express');
-var bodyParser = require('body-parser');
+const fetch = require('node-fetch');
+const cheerio = require('cheerio');
 
-// accessing valuefrom form, saves it in url variable
-function testValue(form){
-    var testVar = form.searchText.value;
-    console.log(testVar);
+const url = 'https://www.imdb.com/find?ref_=nv_sr_fn&s=all&q=';
+
+function searchMovies(searchText){
+  return fetch(`${url}${searchText}`)
+  .then(response => response.text());  
 }
 
-function getParameters() {
-    var query = window.location.href.split('?')[1];
-   
-    //query won't be set if ? isn't in the URL
-    if(!query) {
-      return { };
-    }
-   
-    var params = query.split('&');
-   
-    var pairs = {};
-    for(var i = 0, len = params.length; i < len; i++) {
-      var pair = params[i].split('=');
-      pairs[pair[0]] = pair[1];
-    }
-   
-    return pairs;
-  }
+searchMovies('spiderman')
+.then(body => {
+  //console.log(body);
+  let $ = cheerio.load(body);
+  let list = $(".findResult").each(function(i, element){
+    console.log($(this).text());
+  });
+});
+
