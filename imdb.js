@@ -1,10 +1,8 @@
 const url = require('url');
 var http = require('http');
 var fs = require('fs');
-var imdb = require('imdb-api');
 var express = require('express');
 var bodyParser = require('body-parser');
-var app = express();
 
 // accessing valuefrom form, saves it in url variable
 function testValue(form){

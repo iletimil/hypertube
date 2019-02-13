@@ -11,9 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
     "express-generator": "^4.16.0",
-    "imdb-api": "^4.0.2",
+    "imdb": "^1.1.0",
+    "node-fetch": "^2.3.0",
     "nodemailer": "^5.1.1",
     "url": "^0.11.0"
   }
