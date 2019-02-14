@@ -14,6 +14,7 @@
     "express": "^4.16.4",
     "express-generator": "^4.16.0",
     "imdb-api": "^4.0.2",
-    "nodemailer": "^5.1.1"
+    "nodemailer": "^5.1.1",
+    "torrent-stream": "^1.1.0"
   }
 }

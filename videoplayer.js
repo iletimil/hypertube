@@ -1,8 +1,10 @@
 var fs = require('fs');
-//var express = require('express');
+var express = require('express');
 var path = require('path');
-//var app = express();
+var app = express();
+var Webtorent = require('webtorrent');
 var http = require('http');
+var router = express.Router();
 
 http.createServer(function(req, res){
 
@@ -40,6 +42,8 @@ http.createServer(function(req, res){
                 "Content-Lenght": chunksize,
                 "Content-Type"  : "video/mp4"
             });
+
+
             var stream = fs.createReadStream(file, {start : start, end : end}).on("open", function(){
                 stream.pipe(res);
             }).on("error", function(err){
