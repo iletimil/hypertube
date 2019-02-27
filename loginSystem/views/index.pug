@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1 #{title}
+    if user
+        a(href="/user/logout")
+            button(class='btn btn-default') Logout
+    else
+        a(href="/user/loginForm")
+            button(class='btn btn-default') Login
+        a(href="/user/signupForm")
+            button(class='btn btn-default') Signup
