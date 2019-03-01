@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    p #{user1}
     form(action="/user/signup", method="POST")
         div(class="form-group")
             label(for="firstname") Firstname

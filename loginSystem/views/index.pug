@@ -3,6 +3,8 @@ extends layout
 block content
     h1 #{title}
     if user
+        a(href="/home")
+            button(class='btn btn-default') Home
         a(href="/user/logout")
             button(class='btn btn-default') Logout
     else

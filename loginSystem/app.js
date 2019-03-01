@@ -67,8 +67,23 @@ db.on('error', function(err){
 
 app.get('/', function(req, res){
     res.render("index", {
-        title:'Hypertube | Home'
+        title:'Hypertube | Welcome'
     });
+});
+
+app.get('/home', function(req, res, next){
+    if(req.user)
+    {
+        res.render("home", {
+            title:'Hypertube | Home'
+        });
+    }
+    else
+    {
+        req.flash("danger", "You need to be logged in");
+        res.redirect('/');
+    }
+    next();
 });
 
 app.listen(3000, function(){
