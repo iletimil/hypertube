@@ -1,13 +1,6 @@
 extends layout
 
 block content
-    nav(class="navbar navbar-default")
-        div(class="container")
-            div(class="navbar-header")
-                a(class="navbar-brand", href="/home") Hypertube
-                if user
-                    a(href="/user/logout")
-                        button(class='btn btn-default', id='logout') Logout
     div(class="container")
         div(class="jumbotron")
             h3(class="text-center") Search Movies

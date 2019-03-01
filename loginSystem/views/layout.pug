@@ -13,6 +13,20 @@ html(lang="en")
             if errors
                 each error, i in errors
                     div(class="alert alert-danger") #{error.msg}
+            nav(class="navbar navbar-default")
+                div(class="container")
+                    div(class="navbar-header")
+                        a(class="navbar-brand", href="/home") Hypertube
+                        if user
+                            a(href="/home")
+                                button(class='btn btn-default') Home
+                            a(href="/user/logout")
+                                button(class='btn btn-default') Logout
+                        else
+                            a(href="/user/loginForm")
+                                button(class='btn btn-default') Login
+                            a(href="/user/signupForm")
+                                button(class='btn btn-default') Signup
             block content
             hr
             footer
