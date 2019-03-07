@@ -30,7 +30,7 @@ router.get('/add/:magnet', function(req, res){
     {
         // array that will hold the content of the magnet
 
-        var files = [];
+        let files = [];
 
         //loop all the files inside the magnet and add them
 
@@ -50,9 +50,13 @@ router.get('/stream/:magnet/:file_name', function(req, res, next){
 
     let magnet = req.params.magnet;
 
+    //returns the torrent with the given torrentID
     var tor = client.get(magnet);
-    var file = {};
 
+    //vaiable that will store the user selected file
+    let file = {};
+
+    //loop until it finds the magnet hash the user selected
     for(i = 0; i <tor5.files.lenght; i++)
     {
         if(tor.files[i].name == req.params.file_name)
@@ -61,53 +65,78 @@ router.get('/stream/:magnet/:file_name', function(req, res, next){
         }
     }
 
-    var range = req.headers.range;
+    let range = req.headers.range;
     console.log(range);
-})
 
-http.createServer(function(req, res){
-
-    if(req.url != "movie.mp4"){
-        res.writeHead(200, {"Content-Type" : "text/html"});
-        res.end('<video src ="http://localhost"2020/movie.mp4" controls></video>');
-    }
-    else
+    if(!range)
     {
-        var file = path.resolve(__dirname, "movie.mp4");
-        fs.stat(file, function(err, stats){
-            if (err)
-            {
-                if (err.code === 'ENOENT'){
-                    // 404 Error if file isn't found
-                    return res.sendStatus(404);
-                }
-                res.end(err);
-            }
-            var range = req.headers.range;
-            if(!range)
-            {
-                // 416 wrong range
-                return res.sendStatus(416)
-            }
-            var positions = range.replace(/bytes=/, "").split("-");
-            var start = parseInt(positions[0], 10);
-            var total = stats.size;
-            var end = positions[1] ? parseInt(positions[0], 10) : total - 1;
-            var chunksize = (end - start) + 1;
-
-            res.writeHead(206, {
-                "Content-Range" : "bytes " + start + "-" + end + "/" + total,
-                "Accept-Ranges" : "bytes",
-                "Content-Lenght": chunksize,
-                "Content-Type"  : "video/mp4"
-            });
-
-
-            var stream = fs.createReadStream(file, {start : start, end : end}).on("open", function(){
-                stream.pipe(res);
-            }).on("error", function(err){
-                res.end(err);
-            });
-        });
+        // 416 wrong range
+        return res.sendStatus(416)
     }
-}).listen(2020);
+
+    //convert the string in to an array for easy use
+    let positions = range.replace(/bytes=/, "").split("-");
+
+    //convert the start value in to an integer
+    let start = parseInt(positions[0], 10);
+
+    //save the total file size in to a variable
+    let total = file.length;
+
+    //if the end parameter is there convert it to an integer
+    //else use the total var as the last the last part to be sent
+    let end = positions[1] ? parseInt(positions[0], 10) : total - 1;
+    
+    //calculate the amount of bytes will be sent back to the browser
+    let chunksize = (end - start) + 1;
+
+    //create the header fot the video tag so it knows what is receiving and send the custom head
+    res.writeHead(206, {
+        "Content-Range" : "bytes " + start + "-" + end + "/" + total,
+        "Accept-Ranges" : "bytes",
+        "Content-Lenght": chunksize,
+        "Content-Type"  : "video/mp4"
+    });
+
+    //
+    //
+    //
+    let stream = fs.createReadStream(file, {start : start, end : end}).on("open", function(){
+        stream.pipe(res);
+    }).on("error", function(err){
+        res.end(err);
+    });
+});
+
+router.get('/list', function(req, res, next){
+
+    let torrent = client.torrents.reduce(function(array, data){
+        array.push({
+            hash : data.infoHash
+        });
+        return array;
+    }, []);
+
+    //return the magnet hashes
+    res.status(200);
+	res.json(torrent);
+});
+
+//api that sends back stats of the client
+router.get('/stats', function(req, res, next){
+    res.status(200);
+    res.json(stats);
+});
+
+//api that deletes magnet from client
+router.get('/delete/:magnet', function(req, res, next){
+
+    let magnet = req.params.magnet;
+
+    client.remove(magnet, function(){
+        res.status(200);
+        res.end();
+    });
+});
+
+module.exports = router;
